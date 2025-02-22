@@ -1,3 +1,4 @@
+---@type LazySpec[]
 return {
     {
         "Civitasv/cmake-tools.nvim",
@@ -12,14 +13,7 @@ return {
         "mason.nvim",
         opts = { ensure_installed = { "cmakelang", "cmakelint" } },
     },
-    {
-        "neovim/nvim-lspconfig",
-        opts = {
-            servers = {
-                neocmake = {},
-            },
-        },
-    },
+    { "neovim/nvim-lspconfig", opts = { servers = { neocmake = {} } } },
     {
         "nvim-treesitter/nvim-treesitter",
         opts = { ensure_installed = { "cmake" } },

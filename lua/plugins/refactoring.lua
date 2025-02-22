@@ -1,5 +1,4 @@
+---@type LazySpec[]
 return {
-    {
-        "ThePrimeagen/refactoring.nvim",
-    },
+    { "ThePrimeagen/refactoring.nvim" },
 }

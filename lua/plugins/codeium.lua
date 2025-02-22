@@ -1,5 +1,4 @@
+---@type LazySpec[]
 return {
-    {
-        "Exafunction/codeium.nvim",
-    },
+    { "Exafunction/codeium.nvim" },
 }
