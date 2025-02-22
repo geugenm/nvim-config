@@ -7,6 +7,9 @@ return {
         "p00f/clangd_extensions.nvim",
     },
     {
+        "hrsh7th/nvim-cmp",
+    },
+    {
         "neovim/nvim-lspconfig",
         opts = {
             servers = {
