@@ -1,5 +1,5 @@
 return {
-    -- CMake Tools plugin for working with CMake projects
+
     {
         "Civitasv/cmake-tools.nvim",
         lazy = true,
@@ -22,11 +22,26 @@ return {
             })
         end,
         opts = {
-            cmake_command = "cmake",
             cmake_regenerate_on_save = true,
             cmake_generate_options = { "-DCMAKE_EXPORT_COMPILE_COMMANDS=1" },
             cmake_build_options = {},
             cmake_virtual_text_support = true,
         },
+    },
+    {
+        "mason.nvim",
+        opts = { ensure_installed = { "cmakelang", "cmakelint" } },
+    },
+    {
+        "neovim/nvim-lspconfig",
+        opts = {
+            servers = {
+                neocmake = {},
+            },
+        },
+    },
+    {
+        "nvim-treesitter/nvim-treesitter",
+        opts = { ensure_installed = { "cmake" } },
     },
 }
