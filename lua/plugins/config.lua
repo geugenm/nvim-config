@@ -10,8 +10,6 @@ return {
                 json = { "prettierd" },
                 cmake = { "cmake_format" },
                 yaml = { "prettierd", "prettier" },
-                javascript = { "prettierd", "prettier" },
-                gdscript = { "gdformat" },
             },
         },
     },
