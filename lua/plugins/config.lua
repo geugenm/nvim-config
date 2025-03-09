@@ -9,22 +9,11 @@ return {
                 rust = { "rustfmt" },
                 json = { "prettierd" },
                 cmake = { "cmake_format" },
-                yaml = { "prettierd", "prettier" },
+                yaml = { "prettierd" },
             },
         },
     },
     { "b0o/SchemaStore.nvim", lazy = true, version = false },
-    {
-        "nvim-treesitter/nvim-treesitter",
-        opts = {
-            ensure_installed = { "yaml" },
-        },
-    },
-    {
-        "nvim-treesitter/nvim-treesitter",
-        opts = { ensure_installed = { "dockerfile" } },
-    },
-    { "mason.nvim", opts = { ensure_installed = { "hadolint" } } },
     { "ThePrimeagen/refactoring.nvim" },
     {
         "nvim-treesitter/nvim-treesitter",
@@ -32,12 +21,14 @@ return {
             ensure_installed = {
                 "bash",
                 "json",
+                "yaml",
                 "lua",
                 "markdown",
                 "markdown_inline",
                 "query",
                 "regex",
                 "vim",
+                "dockerfile",
             },
         },
     },
@@ -49,8 +40,30 @@ return {
                 "shellcheck",
                 "shfmt",
                 "flake8",
+                "hadolint",
             },
         },
     },
     { "Exafunction/codeium.nvim", lazy = true },
+    {
+        "neovim/nvim-lspconfig",
+        ---@class PluginLspOpts
+        opts = {
+            ---@type lspconfig.options
+            servers = {
+                -- pyright will be automatically installed with mason and loaded with lspconfig
+                basedpyright = {},
+            },
+        },
+    },
+
+    -- override nvim-cmp and add cmp-emoji
+    {
+        "hrsh7th/nvim-cmp",
+        dependencies = { "hrsh7th/cmp-emoji" },
+        ---@param opts cmp.ConfigSchema
+        opts = function(_, opts)
+            table.insert(opts.sources, { name = "emoji" })
+        end,
+    },
 }
