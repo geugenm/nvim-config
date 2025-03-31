@@ -22,6 +22,8 @@ cd nvim-config
 
 Refer to [LazyVim Documentation](https://lazyvim.github.io/installation)
 
+Do not install nvim --pre or beta, use only stable build. Especially on windows may lead to snacks.preview and other problems!
+
 ## 🚀 Philosophy
 
 This isn't just a configuration. It's a **statement**.
