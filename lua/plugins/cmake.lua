@@ -1,5 +1,4 @@
 return {
-    -- CMake Tools plugin for working with CMake projects
     {
         "Civitasv/cmake-tools.nvim",
         lazy = true,

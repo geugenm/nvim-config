@@ -41,29 +41,17 @@ return {
                 "shfmt",
                 "flake8",
                 "hadolint",
+                "neocmakelsp",
             },
         },
     },
-    { "Exafunction/codeium.nvim", lazy = true },
+    { "Exafunction/codeium.nvim", lazy = true, optional = true },
     {
         "neovim/nvim-lspconfig",
-        ---@class PluginLspOpts
         opts = {
-            ---@type lspconfig.options
             servers = {
-                -- pyright will be automatically installed with mason and loaded with lspconfig
                 basedpyright = {},
             },
         },
-    },
-
-    -- override nvim-cmp and add cmp-emoji
-    {
-        "hrsh7th/nvim-cmp",
-        dependencies = { "hrsh7th/cmp-emoji" },
-        ---@param opts cmp.ConfigSchema
-        opts = function(_, opts)
-            table.insert(opts.sources, { name = "emoji" })
-        end,
     },
 }
