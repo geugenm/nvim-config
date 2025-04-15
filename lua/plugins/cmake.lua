@@ -11,87 +11,68 @@ return {
         },
         keys = {
             {
-                "<leader>kc",
-                function()
-                    require("cmake-tools").configure()
-                end,
-                desc = "CMake Configure",
+                "<leader>kg",
+                "<cmd>CMakeGenerate<CR>",
+                desc = "CMake Generate",
             },
             {
                 "<leader>kb",
-                function()
-                    require("cmake-tools").build()
-                end,
+                "<cmd>CMakeBuild<CR>",
                 desc = "CMake Build",
             },
             {
                 "<leader>kr",
-                function()
-                    require("cmake-tools").run()
-                end,
+                "<cmd>CMakeRun<CR>",
                 desc = "CMake Run Target",
             },
             {
                 "<leader>kd",
-                function()
-                    require("cmake-tools").debug()
-                end,
+                "<cmd>CMakeDebug<CR>",
                 desc = "CMake Debug Target",
             },
             {
-                "<leader>ks",
-                function()
-                    require("cmake-tools").stop()
-                end,
+                "<leader>kse",
+                "<cmd>CMakeStopExecutor<CR>",
+                desc = "CMake Stop",
+            },
+            {
+                "<leader>ksr",
+                "<cmd>CMakeStopRunner<CR>",
                 desc = "CMake Stop",
             },
             {
                 "<leader>kC",
-                function()
-                    require("cmake-tools").clean()
-                end,
+                "<cmd>CMakeClean<CR>",
                 desc = "CMake Clean",
             },
             {
                 "<leader>kp",
-                function()
-                    require("cmake-tools").select_configure_preset()
-                end,
+                "<cmd>CMakeSelectConfigurePreset<CR>",
                 desc = "CMake Select Configure Preset",
             },
             {
                 "<leader>kP",
-                function()
-                    require("cmake-tools").select_build_preset()
-                end,
+                "<cmd>CMakeSelectBuildPreset<CR>",
                 desc = "CMake Select Build Preset",
             },
             {
                 "<leader>kt",
-                function()
-                    require("cmake-tools").select_build_target()
-                end,
+                "<cmd>CMakeSelectBuildTarget<CR>",
                 desc = "CMake Select Build Target",
             },
             {
                 "<leader>kl",
-                function()
-                    require("cmake-tools").select_launch_target()
-                end,
+                "<cmd>CMakeSelectLaunchTarget<CR>",
                 desc = "CMake Select Launch Target",
             },
             {
                 "<leader>kk",
-                function()
-                    require("cmake-tools").select_kit()
-                end,
+                "<cmd>CMakeSelectKit<CR>",
                 desc = "CMake Select Kit (No Preset)",
             },
             {
                 "<leader>kT",
-                function()
-                    require("cmake-tools").select_build_type()
-                end,
+                "<cmd>CMakeSelectBuildType<CR>",
                 desc = "CMake Select Build Type (No Preset)",
             },
         },
