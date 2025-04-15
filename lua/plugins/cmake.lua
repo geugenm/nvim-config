@@ -11,84 +11,84 @@ return {
         },
         keys = {
             {
-                "<leader>cc",
+                "<leader>kc",
                 function()
                     require("cmake-tools").configure()
                 end,
                 desc = "CMake Configure",
             },
             {
-                "<leader>cb",
+                "<leader>kb",
                 function()
                     require("cmake-tools").build()
                 end,
                 desc = "CMake Build",
             },
             {
-                "<leader>cR",
+                "<leader>kr",
                 function()
                     require("cmake-tools").run()
                 end,
                 desc = "CMake Run Target",
             },
             {
-                "<leader>cd",
+                "<leader>kd",
                 function()
                     require("cmake-tools").debug()
                 end,
                 desc = "CMake Debug Target",
             },
             {
-                "<leader>cs",
+                "<leader>ks",
                 function()
                     require("cmake-tools").stop()
                 end,
                 desc = "CMake Stop",
             },
             {
-                "<leader>cC",
+                "<leader>kC",
                 function()
                     require("cmake-tools").clean()
                 end,
                 desc = "CMake Clean",
             },
             {
-                "<leader>cp",
+                "<leader>kp",
                 function()
                     require("cmake-tools").select_configure_preset()
                 end,
                 desc = "CMake Select Configure Preset",
             },
             {
-                "<leader>cP",
+                "<leader>kP",
                 function()
                     require("cmake-tools").select_build_preset()
                 end,
                 desc = "CMake Select Build Preset",
             },
             {
-                "<leader>ct",
+                "<leader>kt",
                 function()
                     require("cmake-tools").select_build_target()
                 end,
                 desc = "CMake Select Build Target",
             },
             {
-                "<leader>cl",
+                "<leader>kl",
                 function()
                     require("cmake-tools").select_launch_target()
                 end,
                 desc = "CMake Select Launch Target",
             },
             {
-                "<leader>ck",
+                "<leader>kk",
                 function()
                     require("cmake-tools").select_kit()
                 end,
                 desc = "CMake Select Kit (No Preset)",
             },
             {
-                "<leader>cT",
+                "<leader>kT",
                 function()
                     require("cmake-tools").select_build_type()
                 end,
