@@ -8,7 +8,6 @@ return {
                 python = { "black" },
                 rust = { "rustfmt" },
                 json = { "prettierd" },
-                cmake = { "clang-format" },
                 yaml = { "prettierd" },
                 javascript = { "prettierd" },
             },

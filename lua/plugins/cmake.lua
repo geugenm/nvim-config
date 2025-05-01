@@ -1,28 +1,15 @@
 return {
     {
-        "nvim-treesitter/nvim-treesitter",
-        opts = { ensure_installed = { "cmake" } },
-    },
-    {
-        "neovim/nvim-lspconfig",
-        opts = {
-            servers = {
-                neocmake = {},
-            },
-        },
-    },
-    {
-        "mfussenegger/nvim-lint",
-        optional = true,
-        opts = {
-            linters_by_ft = {
-                cmake = { "cmakelint" },
-            },
-        },
-    },
-    {
         "williamboman/mason.nvim",
-        opts = { ensure_installed = { "cmakelang", "cmakelint" } },
+        opts = {
+            ensure_installed = {
+                "cmake-language-server", -- LSP for CMake
+                "cmakelang", -- Core toolset for CMake formatting
+                "cmakelint", -- Linting for CMake files
+                "gersemi", -- CMake formatter
+                "neocmakelsp", -- Advanced CMake language server
+            },
+        },
     },
     {
         "Civitasv/cmake-tools.nvim",

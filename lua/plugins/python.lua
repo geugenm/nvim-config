@@ -1,48 +1,14 @@
 return {
     {
-        "nvim-treesitter/nvim-treesitter",
-        opts = { ensure_installed = { "ninja", "rst" } },
-    },
-    {
-        "neovim/nvim-lspconfig",
+        "williamboman/mason.nvim",
         opts = {
-            servers = {
-                ruff = {
-                    cmd_env = { RUFF_TRACE = "messages" },
-                    init_options = {
-                        settings = {
-                            logLevel = "error",
-                        },
-                    },
-                    keys = {
-                        {
-                            "<leader>co",
-                            LazyVim.lsp.action["source.organizeImports"],
-                            desc = "Organize Imports",
-                        },
-                    },
-                },
-                ruff_lsp = {
-                    keys = {
-                        {
-                            "<leader>co",
-                            LazyVim.lsp.action["source.organizeImports"],
-                            desc = "Organize Imports",
-                        },
-                    },
-                },
+            ensure_installed = {
+                "basedpyright", -- Fast Python type checker
+                "black", -- Python code formatter
+                "debugpy", -- Python debugger
+                "pylint", -- Python linter
+                "sonarlint-language-server", -- Static code analyzer
             },
         },
-    },
-    {
-        "neovim/nvim-lspconfig",
-        opts = function(_, opts)
-            local servers =
-                { "pyright", "basedpyright", "ruff", "ruff_lsp", ruff, lsp }
-            for _, server in ipairs(servers) do
-                opts.servers[server] = opts.servers[server] or {}
-                opts.servers[server].enabled = server == lsp or server == ruff
-            end
-        end,
     },
 }
