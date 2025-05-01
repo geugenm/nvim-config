@@ -27,33 +27,8 @@ return {
         },
     },
     {
-        "stevearc/conform.nvim",
-        opts = {
-            formatters_by_ft = {
-                tex = { "latexindent" },
-            },
-        },
-    },
-    {
         "neovim/nvim-lspconfig",
-        opts = {
-            servers = {
-                ltex = {
-                    enabled = true,
-                    settings = {
-                        ltex = {
-                            language = "en-US",
-                            additionalRules = {
-                                enablePickyRules = true,
-                            },
-                        },
-                    },
-                },
-            },
-        },
-    },
-    {
-        "neovim/nvim-lspconfig",
+        optional = true,
         opts = {
             servers = {
                 texlab = {
@@ -66,6 +41,14 @@ return {
                         },
                     },
                 },
+            },
+        },
+    },
+    {
+        "stevearc/conform.nvim",
+        opts = {
+            formatters_by_ft = {
+                tex = { "latexindent" },
             },
         },
     },

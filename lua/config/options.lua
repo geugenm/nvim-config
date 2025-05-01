@@ -9,6 +9,3 @@ vim.opt.fileencoding = "utf-8"
 
 vim.opt.textwidth = 80
 vim.opt.wrap = false
-
-vim.opt.spelllang = { "en", "ru" }
-vim.opt.spell = true

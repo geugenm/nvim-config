@@ -1,5 +1,4 @@
 return {
-    -- малако
     {
         "stevearc/conform.nvim",
         opts = {
@@ -9,13 +8,12 @@ return {
                 python = { "black" },
                 rust = { "rustfmt" },
                 json = { "prettierd" },
-                cmake = { "cmake_format" },
+                cmake = { "clang-format" },
                 yaml = { "prettierd" },
                 javascript = { "prettierd" },
             },
         },
     },
-    { "b0o/SchemaStore.nvim", lazy = true, version = false },
     { "ThePrimeagen/refactoring.nvim" },
     {
         "nvim-treesitter/nvim-treesitter",
@@ -39,10 +37,13 @@ return {
         opts = {
             ensure_installed = {
                 "stylua",
+                "prettierd",
                 "shellcheck",
                 "shfmt",
                 "flake8",
                 "hadolint",
+                "clang-format",
+                "black",
                 "sonarlint-language-server",
             },
         },
