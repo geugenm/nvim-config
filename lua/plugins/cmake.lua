@@ -109,7 +109,7 @@ return {
     {
         'nvim-lualine/lualine.nvim',
         optional = true,
-        event = 'VeryLazy',
+        lazy = true,
         opts = function(_, opts)
             local cmake = require('cmake-tools')
 
@@ -144,7 +144,10 @@ return {
                     -- Add target with explicit label
                     local target = cmake.get_build_target()
                     if target and target ~= '' then
-                        table.insert(parts, string.format('target:%s', target))
+                        table.insert(
+                            parts,
+                            string.format('build_target:%s', target)
+                        )
                     end
 
                     -- Format with Boost-style explicit naming and consistent separators

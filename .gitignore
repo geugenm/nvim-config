@@ -56,4 +56,5 @@ foo.*
 *.log
 data
 lazyvim.json
+lazy-lock.json
 package-lock.json
