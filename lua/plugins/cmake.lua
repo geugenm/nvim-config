@@ -9,6 +9,14 @@ return {
             cmake_build_options = {},
             cmake_virtual_text_support = true,
         },
+        {
+            "williamboman/mason.nvim",
+            opts = {
+                ensure_installed = {
+                    "neocmakelsp",
+                },
+            },
+        },
         keys = {
             {
                 "<leader>kg",

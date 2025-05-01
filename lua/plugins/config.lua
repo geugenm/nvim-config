@@ -1,4 +1,5 @@
 return {
+    -- малако
     {
         "stevearc/conform.nvim",
         opts = {
@@ -10,6 +11,7 @@ return {
                 json = { "prettierd" },
                 cmake = { "cmake_format" },
                 yaml = { "prettierd" },
+                javascript = { "prettierd" },
             },
         },
     },
@@ -41,16 +43,7 @@ return {
                 "shfmt",
                 "flake8",
                 "hadolint",
-                "neocmakelsp",
-            },
-        },
-    },
-    { "Exafunction/codeium.nvim", lazy = true, optional = true },
-    {
-        "neovim/nvim-lspconfig",
-        opts = {
-            servers = {
-                basedpyright = {},
+                "sonarlint-language-server",
             },
         },
     },
