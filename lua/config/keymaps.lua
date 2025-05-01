@@ -54,6 +54,93 @@ local function lumen_commit_push()
         })
     end
 
+    local function commit_with_message(message)
+        -- Commit changes
+        run_cmd(
+            string.format('git commit -m %s', vim.fn.shellescape(message)),
+            {
+                name = 'git commit',
+                on_success = function()
+                    log('commit successful')
+
+                    -- Push changes
+                    run_cmd('git push', {
+                        name = 'git push',
+                        on_success = function()
+                            log('push successful')
+                        end,
+                        on_error = function(err)
+                            log(
+                                string.format('git push failed: %s', err),
+                                vim.log.levels.ERROR
+                            )
+                        end,
+                    })
+                end,
+                on_error = function(err)
+                    log(
+                        string.format('git commit failed: %s', err),
+                        vim.log.levels.ERROR
+                    )
+                end,
+            }
+        )
+    end
+
+    local function edit_commit_message(initial_message)
+        -- Create a scratch buffer for editing
+        local buf = vim.api.nvim_create_buf(false, true)
+        vim.api.nvim_buf_set_name(buf, 'COMMIT_EDITMSG')
+        vim.api.nvim_buf_set_lines(buf, 0, -1, false, { initial_message })
+
+        -- Set buffer options
+        vim.api.nvim_buf_set_option(buf, 'filetype', 'gitcommit')
+        vim.api.nvim_buf_set_option(buf, 'buftype', 'acwrite')
+        vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
+
+        -- Create a split and show the buffer
+        vim.cmd('vsplit')
+        local win = vim.api.nvim_get_current_win()
+        vim.api.nvim_win_set_buf(win, buf)
+
+        -- Set autocmd to handle when buffer is written and closed
+        vim.api.nvim_create_autocmd('BufWritePost', {
+            buffer = buf,
+            callback = function()
+                local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+                local edited_message = table.concat(lines, '\n')
+                -- Remove comments
+                edited_message = edited_message
+                    :gsub('^#.*\n', '')
+                    :gsub('\n#.*', '')
+                    :gsub('^%s*(.-)%s*$', '%1')
+
+                if edited_message ~= '' then
+                    vim.schedule(function()
+                        vim.api.nvim_buf_delete(buf, { force = true })
+                        commit_with_message(edited_message)
+                    end)
+                else
+                    log('Empty commit message, aborting', vim.log.levels.WARN)
+                end
+                return true
+            end,
+            once = true,
+        })
+
+        -- Add some instructions at the top of the buffer
+        vim.api.nvim_buf_set_lines(buf, 0, 0, false, {
+            '# Edit commit message then save (:w) to commit',
+            "# Lines starting with '#' will be ignored",
+            '#',
+            '# Press :q to cancel',
+        })
+
+        -- Position cursor after the instructions
+        vim.api.nvim_win_set_cursor(win, { 5, 0 })
+        vim.cmd('startinsert')
+    end
+
     -- Generate commit message with lumen
     run_cmd('lumen draft', {
         name = 'lumen draft',
@@ -68,39 +155,8 @@ local function lumen_commit_push()
             local commit_message = output[1]
             log(string.format('generated commit message: %s', commit_message))
 
-            -- Commit changes
-            run_cmd(
-                string.format(
-                    'git commit -m %s',
-                    vim.fn.shellescape(commit_message)
-                ),
-                {
-                    name = 'git commit',
-                    on_success = function()
-                        log('commit successful')
-
-                        -- Push changes
-                        run_cmd('git push', {
-                            name = 'git push',
-                            on_success = function()
-                                log('push successful')
-                            end,
-                            on_error = function(err)
-                                log(
-                                    string.format('git push failed: %s', err),
-                                    vim.log.levels.ERROR
-                                )
-                            end,
-                        })
-                    end,
-                    on_error = function(err)
-                        log(
-                            string.format('git commit failed: %s', err),
-                            vim.log.levels.ERROR
-                        )
-                    end,
-                }
-            )
+            -- Open buffer for editing the message
+            edit_commit_message(commit_message)
         end,
         on_error = function(err)
             log(
