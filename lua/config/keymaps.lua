@@ -62,7 +62,7 @@ local function lumen_commit_push()
             on_stderr = function(_, err)
                 if err and #err > 0 then
                     log(
-                        'Lumen error: ' .. table.concat(err, '\n'),
+                        'lumen error: ' .. table.concat(err, '\n'),
                         vim.log.levels.ERROR
                     )
                 end
