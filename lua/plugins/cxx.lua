@@ -30,6 +30,7 @@ return {
                         usePlaceholders = true,
                         completeUnimported = true,
                         clangdFileStatus = true,
+                        semanticHighlighting = true,
                     },
                 },
             },
