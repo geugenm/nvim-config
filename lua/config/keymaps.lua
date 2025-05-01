@@ -3,57 +3,74 @@
 -- Add any additional keymaps here
 
 local function lumen_commit_push()
-    -- Helper function for logging
     local function log(msg, level)
         vim.notify(msg, level or vim.log.levels.INFO)
     end
 
-    -- Execute git commands after editing
-    local function execute_git_commands(message)
-        if not message or message:match('^%s*$') then
-            return log('empty commit message, aborting', vim.log.levels.WARN)
-        end
+    -- Check if there are staged changes ready to commit
+    local function has_staged_changes()
+        -- Exit code is non-zero if there are staged changes
+        local result = vim.fn.system('git diff --cached --quiet')
+        return vim.v.shell_error ~= 0
+    end
 
-        -- Commit with the edited message
-        local commit_cmd =
-            string.format('git commit -m %s', vim.fn.shellescape(message))
-        local commit_job = vim.fn.jobstart(commit_cmd, {
-            on_exit = function(_, code)
-                if code == 0 then
-                    log('commit successful')
-
-                    -- Push changes after successful commit
-                    local push_job = vim.fn.jobstart('git push', {
-                        on_exit = function(_, push_code)
-                            if push_code == 0 then
-                                log('push successful')
+    -- Prompt to stage changes if needed
+    local function prompt_stage_changes()
+        vim.ui.select({ 'Yes', 'No' }, {
+            prompt = 'No staged changes. Stage all files?',
+            format_item = function(item)
+                return item == 'Yes' and ' Stage all changes' or ' Cancel'
+            end,
+        }, function(choice)
+            if choice == 'Yes' then
+                vim.fn.jobstart('git add -A', {
+                    on_exit = function(_, code)
+                        if code == 0 then
+                            if has_staged_changes() then
+                                log('Changes staged successfully')
+                                generate_commit_message()
                             else
                                 log(
-                                    'push failed with code: ' .. push_code,
-                                    vim.log.levels.ERROR
+                                    'No changes to commit after staging',
+                                    vim.log.levels.WARN
                                 )
                             end
-                        end,
-                        on_stderr = function(_, data)
-                            if data and #data > 0 then
-                                log(
-                                    'push error: ' .. table.concat(data, '\n'),
-                                    vim.log.levels.ERROR
-                                )
-                            end
-                        end,
-                    })
-                else
+                        else
+                            log('Failed to stage changes', vim.log.levels.ERROR)
+                        end
+                    end,
+                })
+            else
+                log('Commit canceled', vim.log.levels.INFO)
+            end
+        end)
+    end
+
+    -- Generate commit message with lumen
+    local function generate_commit_message()
+        vim.fn.jobstart('lumen draft', {
+            stdout_buffered = true,
+            on_stdout = function(_, data)
+                if not data or #data == 0 or not data[1] or data[1] == '' then
+                    return log(
+                        'Failed to generate commit message',
+                        vim.log.levels.ERROR
+                    )
+                end
+                edit_commit_message(data[1])
+            end,
+            on_stderr = function(_, err)
+                if err and #err > 0 then
                     log(
-                        'commit failed with code: ' .. code,
+                        'Lumen error: ' .. table.concat(err, '\n'),
                         vim.log.levels.ERROR
                     )
                 end
             end,
-            on_stderr = function(_, data)
-                if data and #data > 0 then
+            on_exit = function(_, code)
+                if code ~= 0 then
                     log(
-                        'commit error: ' .. table.concat(data, '\n'),
+                        'Lumen draft failed with code: ' .. code,
                         vim.log.levels.ERROR
                     )
                 end
@@ -61,106 +78,55 @@ local function lumen_commit_push()
         })
     end
 
-    -- Run lumen to generate the commit message
-    local draft_job = vim.fn.jobstart('lumen draft', {
-        stdout_buffered = true,
-        on_stdout = function(_, data)
-            if not data or #data == 0 or not data[1] or data[1] == '' then
-                return log(
-                    'failed to generate commit message',
-                    vim.log.levels.ERROR
-                )
+    -- Edit and confirm commit message
+    local function edit_commit_message(message)
+        vim.ui.input({
+            prompt = 'Edit commit message:',
+            default = message,
+            filetype = 'gitcommit',
+            border = 'rounded',
+            title = ' Lumen Commit ',
+            title_pos = 'center',
+        }, function(final_msg)
+            if not final_msg or final_msg:gsub('%s', '') == '' then
+                return log('Commit aborted: empty message', vim.log.levels.WARN)
             end
 
-            local commit_msg = data[1]
-            log('lumen generated commit message: ' .. commit_msg)
-
-            -- Create a buffer for editing
-            local buf = vim.api.nvim_create_buf(false, true)
-            vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
-            vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
-            vim.api.nvim_buf_set_name(buf, 'COMMIT_EDITMSG')
-            vim.api.nvim_buf_set_option(buf, 'filetype', 'gitcommit')
-
-            -- Add the instructions and commit message
-            local buffer_text = {
-                '# Edit commit message (generated by lumen)',
-                '# Press <leader>s to save and commit, or :q! to cancel',
-                '#',
-                commit_msg,
-            }
-            vim.api.nvim_buf_set_lines(buf, 0, -1, false, buffer_text)
-
-            -- Calculate dimensions
-            local width = math.min(80, math.floor(vim.o.columns * 0.8))
-            local height = math.min(20, math.floor(vim.o.lines * 0.7))
-            local col = math.floor((vim.o.columns - width) / 2)
-            local row = math.floor((vim.o.lines - height) / 2)
-
-            -- Open window
-            local win = vim.api.nvim_open_win(buf, true, {
-                relative = 'editor',
-                width = width,
-                height = height,
-                col = col,
-                row = row,
-                border = 'rounded',
-                style = 'minimal',
-                title = 'Edit Commit Message',
-                title_pos = 'center',
-            })
-
-            -- Move cursor to the message line
-            vim.api.nvim_win_set_cursor(win, { 4, 0 })
-
-            -- Set keymaps for this buffer only
-            local opts = { noremap = true, silent = true, buffer = buf }
-
-            -- Map <leader>s to save and continue
-            vim.keymap.set('n', '<leader>s', function()
-                -- Extract user's message, skipping comment lines
-                local lines = {}
-                for _, line in
-                    ipairs(vim.api.nvim_buf_get_lines(buf, 0, -1, false))
-                do
-                    if not line:match('^%s*#') then -- Skip comment lines
-                        table.insert(lines, line)
+            vim.fn.jobstart('git commit -m ' .. vim.fn.shellescape(final_msg), {
+                on_exit = function(_, code)
+                    if code == 0 then
+                        log(' Commit successful')
+                        push_changes()
+                    else
+                        log(
+                            ' Commit failed (code ' .. code .. ')',
+                            vim.log.levels.ERROR
+                        )
                     end
-                end
+                end,
+            })
+        end)
+    end
 
-                local final_message =
-                    table.concat(lines, '\n'):gsub('^%s*(.-)%s*$', '%1')
-                vim.api.nvim_win_close(win, true)
-
-                -- Continue with git commands
-                execute_git_commands(final_message)
-            end, opts)
-
-            -- Display instruction
-            vim.cmd('setlocal nomodified')
-            vim.cmd('startinsert')
-            log(
-                'Edit commit message and press <leader>s to commit',
-                vim.log.levels.INFO
-            )
-        end,
-        on_stderr = function(_, data)
-            if data and #data > 0 then
+    -- Push changes after successful commit
+    local function push_changes()
+        vim.fn.jobstart('git push', {
+            on_exit = function(_, code)
                 log(
-                    'lumen error: ' .. table.concat(data, '\n'),
-                    vim.log.levels.ERROR
+                    code == 0 and ' Push successful'
+                        or ' Push failed (code ' .. code .. ')',
+                    code == 0 and vim.log.levels.INFO or vim.log.levels.ERROR
                 )
-            end
-        end,
-        on_exit = function(_, code)
-            if code ~= 0 then
-                log(
-                    'lumen draft failed with code: ' .. code,
-                    vim.log.levels.ERROR
-                )
-            end
-        end,
-    })
+            end,
+        })
+    end
+
+    -- Start the workflow by checking for staged changes
+    if has_staged_changes() then
+        generate_commit_message()
+    else
+        prompt_stage_changes()
+    end
 end
 
 vim.keymap.set(
