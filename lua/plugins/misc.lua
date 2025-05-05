@@ -10,6 +10,7 @@ return {
                 json = { 'prettierd' },
                 yaml = { 'prettierd' },
                 javascript = { 'prettierd' },
+                cmake = { 'gersemi' },
             },
         },
     },

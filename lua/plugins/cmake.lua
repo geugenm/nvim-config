@@ -3,8 +3,6 @@ return {
         'williamboman/mason.nvim',
         opts = {
             ensure_installed = {
-                'cmake-language-server', -- LSP for CMake
-                'cmakelang', -- Core toolset for CMake formatting
                 'cmakelint', -- Linting for CMake files
                 'gersemi', -- CMake formatter
                 'neocmakelsp', -- Advanced CMake language server
