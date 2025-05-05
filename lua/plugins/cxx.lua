@@ -50,10 +50,6 @@ return {
         'stevearc/conform.nvim',
         optional = true,
         opts = {
-            formatters_by_ft = {
-                cpp = { 'clang-format' },
-                c = { 'clang-format' },
-            },
             formatters = {
                 clang_format = {
                     prepend_args = { '-style=file:.clang-format' },
@@ -63,6 +59,7 @@ return {
     },
     {
         'mfussenegger/nvim-dap',
+        lazy = true,
         optional = true,
     },
     {

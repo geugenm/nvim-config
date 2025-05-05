@@ -11,6 +11,8 @@ return {
                 yaml = { 'prettierd' },
                 javascript = { 'prettierd' },
                 cmake = { 'gersemi' },
+                latex = { 'latexindent' },
+                tex = { 'latexindent' },
             },
         },
     },

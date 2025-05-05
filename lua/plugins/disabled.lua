@@ -1,3 +1,3 @@
 return {
-    -- example: { "catppuccin/nvim", enabled = false },
+    { 'catppuccin/nvim', enabled = false },
 }
