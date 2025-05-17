@@ -8,7 +8,6 @@ return {
                 'clang-format', -- C++ formatter
                 'clangd', -- C++ language server
                 'codelldb', -- LLDB-based debugger
-                'sonarlint-language-server', -- Static code analyzer
             },
         },
     },

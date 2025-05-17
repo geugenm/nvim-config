@@ -17,23 +17,6 @@ return {
             cmake_use_preset = true,
             cmake_soft_link_compile_commands = true,
             cmake_generate_options = { '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' },
-            cmake_notifications = {
-                runner = { enabled = true },
-                executor = { enabled = true },
-                spinner = {
-                    '⠋',
-                    '⠙',
-                    '⠹',
-                    '⠸',
-                    '⠼',
-                    '⠴',
-                    '⠦',
-                    '⠧',
-                    '⠇',
-                    '⠏',
-                }, -- icons used for progress display
-                refresh_rate_ms = 100, -- how often to iterate icons
-            },
             cmake_virtual_text_support = true, -- Show the target related to current file using virtual text (at right corner)
         },
         keys = {
@@ -103,66 +86,5 @@ return {
                 desc = 'CMake Select Build Type (No Preset)',
             },
         },
-    },
-    {
-        'nvim-lualine/lualine.nvim',
-        optional = true,
-        lazy = true,
-        opts = function(_, opts)
-            local cmake = require('cmake-tools')
-
-            table.insert(opts.sections.lualine_c or {}, {
-                function()
-                    if not cmake.is_cmake_project() then
-                        return ''
-                    end
-
-                    local parts = {}
-
-                    -- Add preset info with explicit label
-                    if cmake.has_cmake_preset() then
-                        local preset = cmake.get_configure_preset()
-                        if preset and preset ~= '' then
-                            table.insert(
-                                parts,
-                                string.format('preset:%s', preset)
-                            )
-                        end
-                    end
-
-                    -- Add build type with explicit label
-                    local build_type = cmake.get_build_type()
-                    if build_type and build_type ~= '' then
-                        table.insert(
-                            parts,
-                            string.format('type:%s', build_type)
-                        )
-                    end
-
-                    -- Add target with explicit label
-                    local target = cmake.get_build_target()
-                    if target and target ~= '' then
-                        table.insert(
-                            parts,
-                            string.format('build_target:%s', target)
-                        )
-                    end
-
-                    -- Format with Boost-style explicit naming and consistent separators
-                    if #parts > 0 then
-                        return string.format(
-                            ' cmake[%s]',
-                            table.concat(parts, ' | ')
-                        )
-                    else
-                        return ' cmake[unconfigured]'
-                    end
-                end,
-                cond = function()
-                    return package.loaded['cmake-tools'] ~= nil
-                end,
-                color = { fg = '#1e90ff' },
-            })
-        end,
     },
 }

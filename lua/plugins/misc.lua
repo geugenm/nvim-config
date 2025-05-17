@@ -44,8 +44,6 @@ return {
                 'shfmt',
                 'flake8',
                 'hadolint',
-                'clang-format',
-                'black',
             },
         },
     },
